@@ -3,12 +3,12 @@ import { extend } from "../utils";
 let activeEffect;
 let shouldTrack;
 
-class ReactiveEffect {
+export class ReactiveEffect {
   private _fn;
   deps = [];
   active = true;
   onStop;
-  constructor(fn, public scheduler) {
+  constructor(fn, public scheduler?) {
     this._fn = fn;
   }
 
