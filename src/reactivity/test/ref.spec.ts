@@ -1,5 +1,5 @@
 import { effect } from "../effect";
-import { ref } from "../ref";
+import { ref, isRef, unRef } from "../ref";
 
 describe("ref test", () => {
   it("ref", () => {
@@ -40,5 +40,19 @@ describe("ref test", () => {
     expect(nextCount).toBe(0);
     objectRef.value.count = 2;
     expect(nextCount).toBe(2);
+  });
+
+  it("isRef", () => {
+    const obj = "bojack";
+    const user = ref("bojack");
+    expect(isRef(obj)).toBe(false);
+    expect(isRef(user)).toBe(true);
+  });
+
+  it("isRef", () => {
+    const obj = "bojack";
+    const user = ref("bojack");
+    expect(unRef(user)).toBe("bojack");
+    expect(unRef(obj)).toBe("bojack");
   });
 });
