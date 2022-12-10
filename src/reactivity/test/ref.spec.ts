@@ -1,5 +1,5 @@
 import { effect } from "../effect";
-import { ref, isRef, unRef } from "../ref";
+import { ref, isRef, unRef, proxyRefs } from "../ref";
 
 describe("ref test", () => {
   it("ref", () => {
@@ -54,5 +54,27 @@ describe("ref test", () => {
     const user = ref("bojack");
     expect(unRef(user)).toBe("bojack");
     expect(unRef(obj)).toBe("bojack");
+  });
+
+  it("proxyRefs", () => {
+    const user = {
+      age: ref(10),
+      name: "xiaoming",
+    };
+
+    // 用在vue3 template 中 setup 返回出去时调用了，在代码里不用 .value 去获取值
+    const proxyUser = proxyRefs(user);
+    expect(proxyUser.age).toBe(10);
+    expect(user.age.value).toBe(10);
+    expect(proxyUser.name).toBe("xiaoming");
+
+    // 如果 set 的值是非响应式，就是替换；如果是响应式，就是重新赋值
+    proxyUser.age = 20;
+    expect(proxyUser.age).toBe(20);
+    expect(user.age.value).toBe(20);
+
+    proxyUser.age = ref(10);
+    expect(proxyUser.age).toBe(10);
+    expect(user.age.value).toBe(10);
   });
 });
