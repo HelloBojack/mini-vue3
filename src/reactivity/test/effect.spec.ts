@@ -1,7 +1,7 @@
 import { effect, stop } from "../effect";
 import { reactive } from "../reactive";
 
-describe("effect", () => {
+describe("effect test", () => {
   it("basic effect", () => {
     const user = reactive({
       name: "bojack",

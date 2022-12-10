@@ -1,6 +1,6 @@
 import { isReactive, reactive } from "../reactive";
 
-describe("reactive", () => {
+describe("reactive test", () => {
   it("reactive", () => {
     const user = reactive({
       name: "bojack",

@@ -1,6 +1,6 @@
 import { isReadonly, readonly } from "../reactive";
 
-describe("reactive", () => {
+describe("readonly test", () => {
   it("readonly", () => {
     const user = readonly({
       name: "bojack",

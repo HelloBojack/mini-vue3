@@ -8,7 +8,10 @@ const set = createSetter();
 const readonlyGet = createGetter(true);
 const readonlySet = createSetter(true);
 
-function createGetter(isReadonly = false) {
+const shallowReadonlyGet = createGetter(true, true);
+const shallowReadonlySet = createSetter(true, true);
+
+function createGetter(isReadonly = false, isShallow = false) {
   return function get(target, key, receiver) {
     if (key === ReactiveFlag.IS_REACTIVE) {
       return !isReadonly;
@@ -17,6 +20,8 @@ function createGetter(isReadonly = false) {
     }
 
     const res = Reflect.get(target, key, receiver);
+
+    if (isShallow) return res;
 
     if (isObject(res)) {
       return isReadonly ? readonly(res) : reactive(res);
@@ -30,7 +35,7 @@ function createGetter(isReadonly = false) {
   };
 }
 
-function createSetter(isReadonly = false) {
+function createSetter(isReadonly = false, isShallow = false) {
   return function set(target, key, newValue, receiver) {
     if (isReadonly) {
       console.warn(`readonly object can't set`);
@@ -50,4 +55,9 @@ export const mutableHandlers = {
 export const readonlyHandlers = {
   get: readonlyGet,
   set: readonlySet,
+};
+
+export const shallowReadonlyHandlers = {
+  get: shallowReadonlyGet,
+  set: shallowReadonlySet,
 };
