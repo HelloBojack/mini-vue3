@@ -1,4 +1,4 @@
-import { isReadonly, readonly } from "../reactive";
+import { isReadonly, readonly, isProxy } from "../reactive";
 
 describe("readonly test", () => {
   it("readonly", () => {
@@ -23,6 +23,7 @@ describe("readonly test", () => {
 
     expect(isReadonly(obj)).toBe(false);
     expect(isReadonly(user)).toBe(true);
+    expect(isProxy(user)).toBe(true);
   });
 
   it("nested readonly", () => {
