@@ -20,4 +20,23 @@ describe("reactive", () => {
     expect(isReactive(obj)).toBe(false);
     expect(isReactive(user)).toBe(true);
   });
+
+  it("nested reactive", () => {
+    const obj = {
+      name: "bojack",
+      age: 10,
+      family: [
+        {
+          name: "pear",
+          age: 20,
+        },
+      ],
+    };
+    const user = reactive(obj);
+
+    expect(isReactive(obj)).toBe(false);
+    expect(isReactive(user)).toBe(true);
+    expect(isReactive(user.family)).toBe(true);
+    expect(isReactive(user.family[0])).toBe(true);
+  });
 });
