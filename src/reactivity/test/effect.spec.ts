@@ -82,6 +82,9 @@ describe("effect", () => {
     stop(fn);
     user.age = 12;
     expect(nextAge).toBe(11);
+    user.age++;
+    // ++ = user.age=user.age+1; get set
+    expect(nextAge).toBe(11);
   });
 
   it("effect onStop", () => {
