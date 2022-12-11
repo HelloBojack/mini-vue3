@@ -1,3 +1,5 @@
+import { isObject } from "../utils/index";
+
 export function createComponentInstance(vnode) {
   const component = {
     vnode,
@@ -28,7 +30,7 @@ export function setupStatefulComponent(instance) {
 }
 
 function handleSetupResult(instance, setupResult) {
-  if (typeof setupResult === "object") {
+  if (isObject(setupResult)) {
     instance.setupState = setupResult;
   }
 
