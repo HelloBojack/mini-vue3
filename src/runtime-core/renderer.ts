@@ -1,5 +1,4 @@
 import { ShapeFlags } from "./../utils/shapeFlags";
-import { isObject } from "./../utils/index";
 import { createComponentInstance, setupComponent } from "./component";
 
 export function render(vnode, container) {
@@ -31,7 +30,7 @@ function mountElement(vnode, container) {
   for (const key in props) {
     const val = props[key];
 
-    const isOn = (key) => /^on[A-Z]/.test(key);
+    const isOn = (key: string) => /^on[A-Z]/.test(key);
 
     if (isOn(key)) {
       const event = key.slice(2).toLowerCase();
@@ -61,6 +60,7 @@ function mountComponent(initialVNode, container) {
 
 function setupRenderEffect(instance, initialVNode, container) {
   const proxy = instance.proxy;
+
   const subTree = instance.render.call(proxy);
   patch(subTree, container);
 
