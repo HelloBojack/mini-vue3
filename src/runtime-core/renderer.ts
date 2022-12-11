@@ -29,7 +29,16 @@ function mountElement(vnode, container) {
   }
 
   for (const key in props) {
-    el.setAttribute(key, props[key]);
+    const val = props[key];
+
+    const isOn = (key) => /^on[A-Z]/.test(key);
+
+    if (isOn(key)) {
+      const event = key.slice(2).toLowerCase();
+      el.addEventListener(event, val);
+    } else {
+      el.setAttribute(key, val);
+    }
   }
 
   container.append(el);
