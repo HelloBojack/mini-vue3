@@ -35,7 +35,6 @@ export const App = {
   },
   setup() {
     const instance = getCurrentInstance();
-    console.log("app", instance);
 
     provide("app_value", "app");
     provide("foo_value", "app_foo");
