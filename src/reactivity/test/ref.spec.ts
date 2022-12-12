@@ -49,7 +49,7 @@ describe("ref test", () => {
     expect(isRef(user)).toBe(true);
   });
 
-  it("isRef", () => {
+  it("unRef", () => {
     const obj = "bojack";
     const user = ref("bojack");
     expect(unRef(user)).toBe("bojack");
