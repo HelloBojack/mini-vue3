@@ -1,4 +1,4 @@
-import { h } from "../lib/mini-vue.esm.js";
+import { h, getCurrentInstance, provide } from "../lib/mini-vue.esm.js";
 import { Foo } from "../example/Foo.js";
 
 export const App = {
@@ -34,6 +34,12 @@ export const App = {
     );
   },
   setup() {
+    const instance = getCurrentInstance();
+    console.log("app", instance);
+
+    provide("app_value", "app");
+    provide("foo_value", "app_foo");
+
     return {
       msg: "kkk",
     };
