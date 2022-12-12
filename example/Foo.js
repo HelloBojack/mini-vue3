@@ -1,4 +1,4 @@
-import { h, renderSlots } from "../lib/mini-vue.esm.js";
+import { h, renderSlots,createTextVnode } from "../lib/mini-vue.esm.js";
 
 export const Foo = {
   render() {
@@ -10,7 +10,8 @@ export const Foo = {
       },
       [
         renderSlots(this.$slots, "header", { age: 18 }),
-        "foo" + this.count,
+        // "foo" + this.count,
+        createTextVnode("hello"),
         h("div", {}, "foo"),
         renderSlots(this.$slots, "footer"),
       ]

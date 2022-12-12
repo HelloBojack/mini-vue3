@@ -1,3 +1,4 @@
+import { Fragment, Text } from "./vnode";
 import { handleEventKey, isOn } from "../utils/index";
 import { ShapeFlags } from "./../utils/shapeFlags";
 import { createComponentInstance, setupComponent } from "./component";
@@ -7,16 +8,31 @@ export function render(vnode, container) {
 }
 
 function patch(vnode, container) {
-  if (vnode.shapeFlags & ShapeFlags.ELEMENT) {
-    processElement(vnode, container);
-  } else if (vnode.shapeFlags & ShapeFlags.STATEFUL_COMPONENT) {
-    processComponent(vnode, container);
-  } else {
-    processText(vnode, container);
+  const { type, shapeFlags } = vnode;
+
+  switch (type) {
+    case Fragment:
+      processFragment(vnode, container);
+      break;
+    case Text:
+      processText(vnode, container);
+      break;
+    default:
+      if (shapeFlags & ShapeFlags.ELEMENT) {
+        processElement(vnode, container);
+      } else if (shapeFlags & ShapeFlags.STATEFUL_COMPONENT) {
+        processComponent(vnode, container);
+      }
   }
 }
-function processText(text, container) {
-  container.append(text);
+
+function processFragment(vnode, container) {
+  mountChildren(vnode.children, container);
+}
+
+function processText(vnode, container) {
+  const textNode = (vnode.el = document.createTextNode(vnode.children));
+  container.append(textNode);
 }
 
 function processElement(vnode, container) {
