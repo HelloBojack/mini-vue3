@@ -4,10 +4,10 @@ import { getCurrentInstance } from "./component";
 export function provide(key, value) {
   const currentInstance = getCurrentInstance();
   if (currentInstance) {
-    let { provides } = currentInstance;
-    const parentProvides = currentInstance.parent?.provides;
+    let { provides, parent } = currentInstance;
+    const parentProvides = parent?.provides;
 
-    if (provides === parentProvides) {
+    if (parentProvides === provides) {
       provides = currentInstance.provides = Object.create(parentProvides);
     }
 
@@ -18,11 +18,11 @@ export function provide(key, value) {
 export function inject(key, defaultValue) {
   const currentInstance = getCurrentInstance();
   if (currentInstance) {
-    const parentProvides = currentInstance.parent.provides;
+    const provides = currentInstance.parent?.provides;
 
-    if (hasOwn(parentProvides, key)) {
-      return parentProvides[key];
-    } else {
+    if (key in provides) {
+      return provides[key];
+    } else if (defaultValue) {
       if (typeof defaultValue === "function") {
         return defaultValue();
       }
