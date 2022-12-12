@@ -1,3 +1,4 @@
+import { handleEventKey, isOn } from "../utils/index";
 import { ShapeFlags } from "./../utils/shapeFlags";
 import { createComponentInstance, setupComponent } from "./component";
 
@@ -30,10 +31,8 @@ function mountElement(vnode, container) {
   for (const key in props) {
     const val = props[key];
 
-    const isOn = (key: string) => /^on[A-Z]/.test(key);
-
     if (isOn(key)) {
-      const event = key.slice(2).toLowerCase();
+      const event = handleEventKey(key);
       el.addEventListener(event, val);
     } else {
       el.setAttribute(key, val);

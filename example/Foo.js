@@ -2,9 +2,23 @@ import { h } from "../lib/mini-vue.esm.js";
 
 export const Foo = {
   render() {
-    return h("div", {}, "foo" + this.count);
+    return h(
+      "div",
+      {
+        id: "foo",
+        onClick: this.emitAdd,
+      },
+      "foo" + this.count
+    );
   },
-  setup(props) {
-    console.log(props);
+  setup(props, { emit }) {
+    const emitAdd = () => {
+      // emit("add", 1, 2, 3);
+      emit("add-foo", 1, 2, 3);
+    };
+
+    return {
+      emitAdd,
+    };
   },
 };
