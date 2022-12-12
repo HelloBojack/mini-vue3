@@ -1,4 +1,4 @@
-import { h } from "../lib/mini-vue.esm.js";
+import { h, renderSlots } from "../lib/mini-vue.esm.js";
 
 export const Foo = {
   render() {
@@ -8,7 +8,12 @@ export const Foo = {
         id: "foo",
         onClick: this.emitAdd,
       },
-      "foo" + this.count
+      [
+        renderSlots(this.$slots, "header", { age: 18 }),
+        "foo" + this.count,
+        h("div", {}, "foo"),
+        renderSlots(this.$slots, "footer"),
+      ]
     );
   },
   setup(props, { emit }) {

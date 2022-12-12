@@ -11,7 +11,12 @@ function patch(vnode, container) {
     processElement(vnode, container);
   } else if (vnode.shapeFlags & ShapeFlags.STATEFUL_COMPONENT) {
     processComponent(vnode, container);
+  } else {
+    processText(vnode, container);
   }
+}
+function processText(text, container) {
+  container.append(text);
 }
 
 function processElement(vnode, container) {
