@@ -2,6 +2,7 @@ import { Fragment, Text } from "./vnode";
 import { ShapeFlags } from "./../utils/shapeFlags";
 import { createComponentInstance, setupComponent } from "./component";
 import { createAppApi } from "./createApp";
+import { effect } from "../reactivity/effect";
 
 export function createRenderer(options) {
   const { createElement, createText, patchProps, insert } = options;
@@ -82,12 +83,17 @@ export function createRenderer(options) {
   }
 
   function setupRenderEffect(instance, initialVNode, container) {
-    const proxy = instance.proxy;
+    effect(() => {
+      console.log("123");
 
-    const subTree = instance.render.call(proxy);
-    patch(subTree, container, instance);
+      const proxy = instance.proxy;
 
-    initialVNode.el = subTree.el;
+      const subTree = instance.render.call(proxy);
+
+      patch(subTree, container, instance);
+
+      initialVNode.el = subTree.el;
+    });
   }
 
   return {

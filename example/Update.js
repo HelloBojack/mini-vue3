@@ -1,8 +1,8 @@
-import { h, ref } from "../lib/mini-vue.esm.js";
+import { h, reactive, ref } from "../lib/mini-vue.esm.js";
 
 export const Update = {
   setup() {
-    const count = ref(1);
+    const count = reactive({ value: 0 });
     const click = () => {
       count.value++;
     };
@@ -13,7 +13,7 @@ export const Update = {
   },
   render() {
     return h("div", {}, [
-      this.count,
+      h("div", {}, "count:" + this.count.value),
       h(
         "button",
         {

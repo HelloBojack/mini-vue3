@@ -1,5 +1,6 @@
 import { h, getCurrentInstance, provide } from "../lib/mini-vue.esm.js";
 import { Foo } from "../example/Foo.js";
+import { Update } from "../example/Update.js";
 
 export const App = {
   render() {
@@ -30,12 +31,11 @@ export const App = {
             footer: () => h("p", { id: "p2", class: ["yellow"] }, "footer"),
           }
         ),
+        h(Update),
       ]
     );
   },
   setup() {
-    const instance = getCurrentInstance();
-
     provide("app_value", "app");
     provide("foo_value", "app_foo");
 

@@ -4,6 +4,7 @@ import { emit } from "./componentEmit";
 import { PublicInstanceProxyHandlers } from "./componentPublicInstance";
 import { initProps } from "./componentProps";
 import { initSlots } from "./componentSlots";
+import { proxyRefs } from "../reactivity";
 
 export function createComponentInstance(vnode, parent) {
   const component = {
@@ -53,7 +54,7 @@ export function setupStatefulComponent(instance) {
 
 function handleSetupResult(instance, setupResult) {
   if (isObject(setupResult)) {
-    instance.setupState = setupResult;
+    instance.setupState = proxyRefs(setupResult);
   }
 
   finishSetupComponent(instance);

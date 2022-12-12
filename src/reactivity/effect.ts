@@ -91,13 +91,11 @@ export function effect(fn, options?: any) {
   const scheduler = options?.scheduler;
   const _effect = new ReactiveEffect(fn, scheduler);
   extend(_effect, options);
-
   _effect.run();
 
-  const effect = _effect.run.bind(_effect);
-  effect._effect = _effect;
-
-  return effect;
+  const runner: any = _effect.run.bind(_effect);
+  runner.effect = _effect;
+  return runner;
 }
 
 export function stop(fn) {
