@@ -99,5 +99,5 @@ export function effect(fn, options?: any) {
 }
 
 export function stop(fn) {
-  fn._effect.stop();
+  fn.effect.stop();
 }
