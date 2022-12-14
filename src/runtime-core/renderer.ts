@@ -44,12 +44,11 @@ export function createRenderer(options) {
   }
 
   function processElement(n1, n2, container, parentComponent) {
-    // if (!n1) {
-    mountElement(n2, container, parentComponent);
-    // } else {
-    //   console.log("patch");
-    //   patchElement(n1, n2, container, parentComponent);
-    // }
+    if (!n1) {
+      mountElement(n2, container, parentComponent);
+    } else {
+      patchElement(n1, n2, container, parentComponent);
+    }
   }
 
   function mountElement(n2, container, parentComponent) {
@@ -80,16 +79,25 @@ export function createRenderer(options) {
   }
 
   function patchProps(el, oldProps, newProps) {
-    for (const key in newProps) {
-      const prevProp = oldProps[key];
-      const nextProp = newProps[key];
+    if (oldProps !== newProps) {
+      for (const key in newProps) {
+        const prevProp = oldProps[key];
+        const nextProp = newProps[key];
 
-      if (prevProp !== nextProp) {
-        patchProp(el, key, prevProp, nextProp);
+        if (prevProp !== nextProp) {
+          patchProp(el, key, prevProp, nextProp);
+        }
+      }
+      if (Object.keys(oldProps).length > 0) {
+        for (const key in oldProps) {
+          const prevProp = oldProps[key];
+
+          if (!(key in newProps)) {
+            patchProp(el, key, prevProp, null);
+          }
+        }
       }
     }
-
-    console.log(oldProps, newProps);
   }
 
   function mountChildren(children, container, parentComponent) {
@@ -111,8 +119,6 @@ export function createRenderer(options) {
 
   function setupRenderEffect(instance, initialVNode, container) {
     effect(() => {
-      console.log("effect");
-
       if (!instance.isMounted) {
         const { proxy } = instance;
         const subTree = (instance.subTree = instance.render.call(proxy));

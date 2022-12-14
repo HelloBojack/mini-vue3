@@ -13,6 +13,8 @@ function patchProp(el, key, preVal, nexVal) {
     const event = handleEventKey(key);
     el.addEventListener(event, nexVal);
   } else {
+    console.log(key);
+
     if (nexVal === undefined || nexVal === null) {
       el.removeAttribute(key);
     } else {
