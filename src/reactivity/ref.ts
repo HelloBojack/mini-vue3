@@ -45,7 +45,7 @@ export function isRef(value) {
 }
 
 export function unRef(value) {
-  return isRef(value) ? value._rawValue : value;
+  return isRef(value) ? value.value : value;
 }
 
 export function proxyRefs(raw) {

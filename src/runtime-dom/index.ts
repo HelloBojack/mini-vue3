@@ -8,12 +8,16 @@ function createText(vnode) {
   return document.createTextNode(vnode);
 }
 
-function patchProps(el, val, key) {
+function patchProp(el, key, preVal, nexVal) {
   if (isOn(key)) {
     const event = handleEventKey(key);
-    el.addEventListener(event, val);
+    el.addEventListener(event, nexVal);
   } else {
-    el.setAttribute(key, val);
+    if (nexVal === undefined || nexVal === null) {
+      el.removeAttribute(key);
+    } else {
+      el.setAttribute(key, nexVal);
+    }
   }
 }
 
@@ -24,7 +28,7 @@ function insert(el, container) {
 const renderer: any = createRenderer({
   createElement,
   createText,
-  patchProps,
+  patchProp,
   insert,
 });
 
