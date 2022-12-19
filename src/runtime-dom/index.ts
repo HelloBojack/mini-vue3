@@ -8,13 +8,15 @@ function createText(vnode) {
   return document.createTextNode(vnode);
 }
 
+function setText(el, text) {
+  el.textContent = text;
+}
+
 function patchProp(el, key, preVal, nexVal) {
   if (isOn(key)) {
     const event = handleEventKey(key);
     el.addEventListener(event, nexVal);
   } else {
-    console.log(key);
-
     if (nexVal === undefined || nexVal === null) {
       el.removeAttribute(key);
     } else {
@@ -27,11 +29,17 @@ function insert(el, container) {
   container.append(el);
 }
 
+function remove(child) {
+  child.parentNode.removeChild(child);
+}
+
 const renderer: any = createRenderer({
   createElement,
   createText,
+  setText,
   patchProp,
   insert,
+  remove,
 });
 
 export function createApp(...args) {
