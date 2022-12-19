@@ -7,6 +7,7 @@ export const Text = Symbol("Text");
 export function createVNode(type, props?, children?) {
   const vnode = {
     type,
+    key: props?.key,
     props,
     children,
     shapeFlags: getShapeFlag(type),
