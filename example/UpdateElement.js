@@ -95,24 +95,38 @@ import { h, ref } from "../lib/mini-vue.esm.js";
 // 前删除
 // abc
 // bc
+// const prevChildren = [
+//   h("p", { key: "A" }, "A"),
+//   h("p", { key: "B" }, "B"),
+//   h("p", { key: "C", id: "prev" }, "C"),
+//   h("p", { key: "D" }, "D"),
+//   h("p", { key: "E" }, "E"),
+//   h("p", { key: "F" }, "F"),
+//   h("p", { key: "G" }, "G"),
+// ];
+// const nextChildren = [
+//   h("p", { key: "A" }, "A"),
+//   h("p", { key: "B" }, "B"),
+//   h("p", { key: "D" }, "D"),
+//   h("p", { key: "X" }, "X"),
+//   h("p", { key: "C", id: "prev" }, "C"),
+//   h("p", { key: "F" }, "F"),
+//   h("p", { key: "G" }, "G"),
+// ];
+
 const prevChildren = [
   h("p", { key: "A" }, "A"),
   h("p", { key: "B" }, "B"),
-  h("p", { key: "C", id: "prev" }, "C"),
+  h("p", {}, "C"),
   h("p", { key: "D" }, "D"),
-  h("p", { key: "E" }, "E"),
-  h("p", { key: "F" }, "F"),
-  h("p", { key: "G" }, "G"),
 ];
 const nextChildren = [
   h("p", { key: "A" }, "A"),
+  h("p", {}, "C"),
   h("p", { key: "B" }, "B"),
   h("p", { key: "D" }, "D"),
-  h("p", { key: "X" }, "X"),
-  h("p", { key: "C", id: "prev" }, "C"),
-  h("p", { key: "F" }, "F"),
-  h("p", { key: "G" }, "G"),
 ];
+
 export const UpdateElement = {
   setup() {
     const state = ref(3);
