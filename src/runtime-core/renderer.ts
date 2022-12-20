@@ -3,6 +3,7 @@ import { ShapeFlags } from "./../utils/shapeFlags";
 import { createComponentInstance, setupComponent } from "./component";
 import { createAppApi } from "./createApp";
 import { effect } from "../reactivity/effect";
+import { queueJobs } from "./scheduler";
 
 export function createRenderer(options) {
   const { createElement, createText, setText, patchProp, insert, remove } =
@@ -274,35 +275,115 @@ export function createRenderer(options) {
   }
 
   function processComponent(n1, n2, container, parentComponent, anchor) {
-    mountComponent(n2, container, parentComponent, anchor);
+    if (!n1) {
+      mountComponent(n2, container, parentComponent, anchor);
+    } else {
+      patchComponent(n1, n2);
+    }
   }
 
   function mountComponent(initialVNode, container, parentComponent, anchor) {
-    const instance = createComponentInstance(initialVNode, parentComponent);
+    const instance = (initialVNode.component = createComponentInstance(
+      initialVNode,
+      parentComponent
+    ));
 
     setupComponent(instance);
     setupRenderEffect(instance, initialVNode, container, anchor);
   }
+  function patchComponent(n1, n2) {
+    const instance = (n2.component = n1.component);
 
-  function setupRenderEffect(instance, initialVNode, container, anchor) {
-    effect(() => {
-      if (!instance.isMounted) {
-        const { proxy } = instance;
-        const subTree = (instance.subTree = instance.render.call(proxy));
-        patch(null, subTree, container, instance, anchor);
+    if (shouldUpdateComponent(n1, n2)) {
+      instance.next = n2;
+      instance.update();
+    } else {
+      n2.el = n1.el;
+      n2.vnode = n2;
+    }
+  }
+  function shouldUpdateComponent(prevVNode, nextVNode) {
+    const { props: prevProps } = prevVNode;
+    const { props: nextProps } = nextVNode;
+    //   const emits = component!.emitsOptions;
 
-        initialVNode.el = subTree.el;
+    // 这里主要是检测组件的 props
+    // 核心：只要是 props 发生改变了，那么这个 component 就需要更新
 
-        instance.isMounted = true;
-      } else {
-        const { proxy } = instance;
-        const subTree = instance.render.call(proxy);
-        const preSubTree = instance.subTree;
-        instance.subTree = preSubTree;
+    // 1. props 没有变化，那么不需要更新
+    if (prevProps === nextProps) {
+      return false;
+    }
+    // 如果之前没有 props，那么就需要看看现在有没有 props 了
+    // 所以这里基于 nextProps 的值来决定是否更新
+    if (!prevProps) {
+      return !!nextProps;
+    }
+    // 之前有值，现在没值，那么肯定需要更新
+    if (!nextProps) {
+      return true;
+    }
 
-        patch(preSubTree, subTree, container, instance, anchor);
+    // 以上都是比较明显的可以知道 props 是否是变化的
+    // 在 hasPropsChanged 会做更细致的对比检测
+    return hasPropsChanged(prevProps, nextProps);
+  }
+
+  function hasPropsChanged(prevProps, nextProps): boolean {
+    // 依次对比每一个 props.key
+
+    // 提前对比一下 length ，length 不一致肯定是需要更新的
+    const nextKeys = Object.keys(nextProps);
+    if (nextKeys.length !== Object.keys(prevProps).length) {
+      return true;
+    }
+
+    // 只要现在的 prop 和之前的 prop 不一样那么就需要更新
+    for (let i = 0; i < nextKeys.length; i++) {
+      const key = nextKeys[i];
+      if (nextProps[key] !== prevProps[key]) {
+        return true;
       }
-    });
+    }
+    return false;
+  }
+  function setupRenderEffect(instance, initialVNode, container, anchor) {
+    instance.update = effect(
+      () => {
+        if (!instance.isMounted) {
+          const { proxy } = instance;
+          const subTree = (instance.subTree = instance.render.call(proxy));
+          patch(null, subTree, container, instance, anchor);
+
+          initialVNode.el = subTree.el;
+
+          instance.isMounted = true;
+        } else {
+          const { proxy, next, vnode } = instance;
+          if (next) {
+            next.el = vnode.el;
+            updateComponentPreRender(instance, next);
+          }
+
+          const subTree = instance.render.call(proxy);
+          const preSubTree = instance.subTree;
+          instance.subTree = preSubTree;
+
+          patch(preSubTree, subTree, container, instance, anchor);
+        }
+      },
+      {
+        scheduler() {
+          queueJobs(instance.update);
+        },
+      }
+    );
+  }
+
+  function updateComponentPreRender(instance, nextVnode) {
+    instance.vnode = nextVnode;
+    instance.next = null;
+    instance.props = nextVnode.props;
   }
 
   return {
