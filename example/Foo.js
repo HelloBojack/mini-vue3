@@ -48,7 +48,6 @@ export const Foo = {
   },
   setup(props, { emit }) {
     const instance = getCurrentInstance();
-    console.log(instance);
     provide("foo_value", "foo");
 
     const app_value = inject("app_value");

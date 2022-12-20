@@ -42,13 +42,13 @@ import { h, ref } from "../lib/mini-vue.esm.js";
 // 前新增
 // ab
 // cab
-const prevChildren = [h("p", { key: "A" }, "A"), h("p", { key: "B" }, "B")];
-const nextChildren = [
-  h("p", { key: "C" }, "C"),
-  h("p", { key: "D" }, "D"),
-  h("p", { key: "A" }, "A"),
-  h("p", { key: "B" }, "B"),
-];
+// const prevChildren = [h("p", { key: "A" }, "A"), h("p", { key: "B" }, "B")];
+// const nextChildren = [
+//   h("p", { key: "C" }, "C"),
+//   h("p", { key: "D" }, "D"),
+//   h("p", { key: "A" }, "A"),
+//   h("p", { key: "B" }, "B"),
+// ];
 
 // 3. 旧长 删除
 // 后添加
@@ -72,6 +72,47 @@ const nextChildren = [
 // ];
 // const nextChildren = [h("p", { key: "B" }, "B"), h("p", { key: "C" }, "C")];
 
+// 4. 乱序 删除
+// a b c d f g
+// a b e c f g
+// const prevChildren = [
+//   h("p", { key: "A" }, "A"),
+//   h("p", { key: "B" }, "B"),
+//   h("p", { key: "C", id: "prev" }, "C"),
+//   h("p", { key: "D" }, "D"),
+//   h("p", { key: "F" }, "F"),
+//   h("p", { key: "G" }, "G"),
+// ];
+// const nextChildren = [
+//   h("p", { key: "A" }, "A"),
+//   h("p", { key: "B" }, "B"),
+//   h("p", { key: "E" }, "E"),
+//   h("p", { key: "C", id: "next" }, "C"),
+//   h("p", { key: "F" }, "F"),
+//   h("p", { key: "G" }, "G"),
+// ];
+
+// 前删除
+// abc
+// bc
+const prevChildren = [
+  h("p", { key: "A" }, "A"),
+  h("p", { key: "B" }, "B"),
+  h("p", { key: "C", id: "prev" }, "C"),
+  h("p", { key: "D" }, "D"),
+  h("p", { key: "E" }, "E"),
+  h("p", { key: "F" }, "F"),
+  h("p", { key: "G" }, "G"),
+];
+const nextChildren = [
+  h("p", { key: "A" }, "A"),
+  h("p", { key: "B" }, "B"),
+  h("p", { key: "D" }, "D"),
+  h("p", { key: "X" }, "X"),
+  h("p", { key: "C", id: "prev" }, "C"),
+  h("p", { key: "F" }, "F"),
+  h("p", { key: "G" }, "G"),
+];
 export const UpdateElement = {
   setup() {
     const state = ref(3);

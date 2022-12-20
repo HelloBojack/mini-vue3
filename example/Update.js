@@ -8,7 +8,6 @@ export const Update = {
       class: "test",
     });
     const click = () => {
-      console.log("click");
       count.value++;
     };
     const click1 = () => {

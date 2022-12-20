@@ -7,8 +7,6 @@ export function emit(instance, event, ...args) {
 
   const handlerKey = toHandlerKey(event);
 
-  console.log(props, handlerKey);
-
   const handler = props[handlerKey];
   handler && handler(...args);
 }
